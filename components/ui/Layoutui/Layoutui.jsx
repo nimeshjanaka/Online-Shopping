@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import React, { useState } from "react";
 import {
   LaptopOutlined,
@@ -7,28 +9,15 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme, Input, Button } from "antd";
-import { useRouter } from "next/router";
-
-const handleMenuClick = (item) => {
-  setSelectedContent(item);
-  const url = `/home-appliances/${item.toLowerCase().replace(/ /g, "-")}`;
-  router.push(url);
-};
 
 const { Search } = Input;
 const { Header, Content, Sider } = Layout;
 
 const menuData = [
   {
-    title: "Sports",
+    title: "sports",
     icon: UserOutlined,
-    children: [
-      "Men's Shoes & Clothes",
-      "Women's Shoes & Clothes",
-      "Water Sports",
-      "Boxing Kit",
-      "Racket Sports",
-    ],
+    children: ["Men-Shoes-Clothes", "Women-Shoes-Clothes", "Water-Sports"],
   },
   {
     title: "Home Appliances",
@@ -42,23 +31,13 @@ const menuData = [
     ],
   },
   {
-    title: "Electronics",
+    title: "electronics",
     icon: NotificationOutlined,
-    children: ["Mobile", "Tablet", "Desktop", "Laptop", "Headset"],
+    children: ["Mobile", "Tablet", "Desktop", "Laptop", "watches"],
   },
+
   {
-    title: "Watches",
-    icon: LaptopOutlined,
-    children: [
-      "Men's Watches",
-      "Women's Watches",
-      "Jewelry",
-      "Sunglasses",
-      "Kids' Watches",
-    ],
-  },
-  {
-    title: "Toys",
+    title: "toys",
     icon: NotificationOutlined,
     children: [
       "Small Kids Toys",
@@ -70,7 +49,7 @@ const menuData = [
   },
 ];
 
-const Layoutui = () => {
+const Layoutui = ({ children }) => {
   const [selectedContent, setSelectedContent] = useState("Home");
   const router = useRouter();
   const {
@@ -86,35 +65,54 @@ const Layoutui = () => {
         return {
           key: `sub${index + 1}-${j + 1}`,
           label: item,
-          onClick: () => handleMenuClick(item),
+          onClick: () => handleMenuClick(item, category.title),
         };
       }),
     };
   });
 
+  const handleMenuClick = (item, categoryTitle) => {
+    setSelectedContent(item);
+    const url = `/${categoryTitle.toLowerCase().replace(/ /g, "-")}/${item
+      .toLowerCase()
+      .replace(/ /g, "-")}`;
+    router.push(url);
+  };
+
   return (
-    <Layout>
+    <Layout >
       <Header
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           padding: "0 20px",
+          borderRadius: borderRadiusLG,
+          borderBottom: "2px solid #ccc",
         }}
       >
+        <Image src="/asset/logo.png" width={60} height={15} alt="Demo Logo" />
+
         <div className="demo-logo" />
         <Search
           placeholder="input search text"
           onSearch={(value) => console.log(value)}
-          style={{ width: 500 }}
+          style={{
+            minWidth: "300px",
+            maxWidth: "700px",
+            alignItems: "center",
+            marginInline: "auto",
+          }}
         />
-        <Button type="primary">Search</Button>
       </Header>
       <Layout>
         <Sider
           width={200}
           style={{
-            background: colorBgContainer,
+            marginTop: "30px",
+            marginLeft: "10px",
+            background: "#bde5e1",
+            borderRadius: borderRadiusLG,
           }}
         >
           <Menu
@@ -125,13 +123,16 @@ const Layoutui = () => {
               height: "100%",
               borderRight: 0,
               borderRadius: borderRadiusLG,
+              background: "#bde5e1",
             }}
             items={items2}
           />
         </Sider>
+
         <Layout
           style={{
             padding: "0 16px 16px",
+            marginTop: "30px",
           }}
         >
           <Content
@@ -139,15 +140,11 @@ const Layoutui = () => {
               padding: 24,
               margin: 0,
               minHeight: 280,
-              background: colorBgContainer,
+              background: "white",
               borderRadius: borderRadiusLG,
             }}
           >
-            {selectedContent === "Men's Shoes & Clothes" ? (
-              <div>Content for Men's Shoes & Clothes</div>
-            ) : (
-              <div>{selectedContent} Page</div>
-            )}
+            {children}
           </Content>
         </Layout>
       </Layout>

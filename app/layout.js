@@ -13,8 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Layoutui />
-        {children}
+        <Layoutui style={{ background: "#191919" }}>{children}</Layoutui>
       </body>
     </html>
   );
